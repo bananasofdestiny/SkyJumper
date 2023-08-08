@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public bool imortality = false;
     public bool hasStartedRotating = false;
     private bool isJumping = false;
+    private bool jumpInputDetected = false;
     private void Start()
     {
         pauseMenu = GetComponent<PauseMenu>();
@@ -30,12 +31,25 @@ public class PlayerController : MonoBehaviour
         float cameraBottomY = cam.transform.position.y;
         if (!PauseMenu.isPaused)
         {
+
             //Input.GetButtonDown("Jump")|| 
             if (Input.touchCount > 0)
             {
-                Jump();
-                hasStartedRotating = true;
-                isJumping = true;
+                Touch touch = Input.GetTouch(0);
+
+                if (touch.phase == TouchPhase.Began && !jumpInputDetected)
+                {
+                    Jump();
+                    hasStartedRotating = true;
+                    isJumping = true;
+                    // Handle jump action
+                    jumpInputDetected = true;
+                }
+                else if (touch.phase == TouchPhase.Ended)
+                {
+                    jumpInputDetected = false;
+                }
+
 
             }
             if (transform.position.y < -5f || transform.position.y > cameraBottomY)
